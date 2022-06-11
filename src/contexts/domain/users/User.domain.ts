@@ -2,7 +2,7 @@ import { Maybe } from "../../context.common";
 import { UserContactData } from "./UserContactData.domain";
 
 export interface UserParams {
-  id: bigint;
+  id: number;
   name: Maybe<string>;
   username: Maybe<string>;
   email: Maybe<string>;
@@ -15,7 +15,7 @@ export interface UserParams {
 }
 
 export class User {
-  id: bigint;
+  id: number;
   name: Maybe<string>;
   username: Maybe<string>;
   email: Maybe<string>;

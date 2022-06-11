@@ -1,11 +1,10 @@
 import { ok } from "assert";
-import axios from "axios";
 import { Request, Response } from "express";
-import Joi, { ValidationError } from "joi";
+import Joi from "joi";
 import CreateUser from "../../application/users/CreateUser";
 import { Controller } from "../Controller";
 
-const validationSchema = Joi.object({
+const PostUsersSchema = Joi.object({
   username: Joi.string().alphanum().min(3).max(30).required(),
   name: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string().email().required(),
@@ -17,7 +16,7 @@ export class PostUsersController implements Controller {
       console.log("[PostUsersController] Creando usuario....");
       console.log(req.body);
 
-      const { error } = validationSchema.validate(req.body);
+      const { error } = PostUsersSchema.validate(req.body);
       console.log("[PostUsersController] Validation");
       console.log(error);
       if (error !== undefined) {
