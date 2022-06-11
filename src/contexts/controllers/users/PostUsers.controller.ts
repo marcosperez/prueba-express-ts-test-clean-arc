@@ -8,6 +8,11 @@ const PostUsersSchema = Joi.object({
   username: Joi.string().alphanum().min(3).max(30).required(),
   name: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string().email().required(),
+  street: Joi.string(),
+  city: Joi.string(),
+  zipcode: Joi.string(),
+  phone: Joi.string(),
+  website: Joi.string(),
 });
 
 export class PostUsersController implements Controller {

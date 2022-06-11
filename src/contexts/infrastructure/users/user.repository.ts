@@ -1,7 +1,8 @@
 import { User } from "../../domain/users/User.domain";
-import { UserRepositoryInterface } from "./user.repository.interface";
 import { PrismaClient } from "@prisma/client";
 import { GetUsersFilterCriteria } from "../../domain/users/GetUsersFilterCriteria.domain";
+import { UserRepositoryInterface } from "./User.repository.interface";
+import { PageData } from "../Infrastructure.common";
 
 class UserRepository implements UserRepositoryInterface {
   prisma: PrismaClient;
@@ -12,16 +13,34 @@ class UserRepository implements UserRepositoryInterface {
   findById(id: number): Promise<User> {
     throw new Error("Method not implemented.");
   }
-  async find(where: GetUsersFilterCriteria): Promise<User[]> {
+
+  async find(where: GetUsersFilterCriteria): Promise<PageData<User>> {
     const skip = (where.page - 1) * where.pageSize;
+    let whereQuery = {};
+    if (where.filter) {
+      whereQuery = {
+        OR: {
+          username: { contains: where.filter },
+          name: { contains: where.filter },
+          email: { contains: where.filter },
+        },
+      };
+    }
+
     const allUsers = await this.prisma.users.findMany({
-      where: { username: { contains: where.filter } },
+      where: whereQuery,
       take: where.pageSize,
       skip: skip,
     });
-    console.log(allUsers);
+    const totalUsers = await this.prisma.users.count({ where: whereQuery });
 
-    return allUsers.map((u) => new User(u));
+    console.log(allUsers);
+    const pageData: PageData<User> = {
+      list: allUsers.map((u) => new User(u)),
+      totalRegistries: totalUsers,
+    };
+
+    return pageData;
   }
   update(id: number, user: User): Promise<User> {
     throw new Error("Method not implemented.");

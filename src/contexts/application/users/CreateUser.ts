@@ -1,5 +1,5 @@
 import { User, UserParams } from "../../domain/users/User.domain";
-import userRepository from "../../infrastructure/users/user.repository";
+import userRepository from "../../infrastructure/users/User.repository";
 
 class CreateUser {
   async execute(userData: UserParams): Promise<User> {

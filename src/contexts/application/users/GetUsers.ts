@@ -1,10 +1,11 @@
 import { GetUsersFilterCriteria } from "../../domain/users/GetUsersFilterCriteria.domain";
-import { User, UserParams } from "../../domain/users/User.domain";
-import userRepository from "../../infrastructure/users/user.repository";
+import { User } from "../../domain/users/User.domain";
+import { PageData } from "../../infrastructure/Infrastructure.common";
+import UserRepository from "../../infrastructure/users/User.repository";
 
 export class GetUsers {
-  async execute(query: GetUsersFilterCriteria): Promise<Array<User>> {
-    const usersDb = userRepository.find(query);
+  async execute(query: GetUsersFilterCriteria): Promise<PageData<User>> {
+    const usersDb = UserRepository.find(query);
 
     return usersDb;
   }

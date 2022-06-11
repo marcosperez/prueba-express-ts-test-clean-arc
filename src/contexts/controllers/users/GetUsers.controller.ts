@@ -6,7 +6,7 @@ import { Controller } from "../Controller";
 import { GetUsersFilterCriteria } from "../../domain/users/GetUsersFilterCriteria.domain";
 
 const GetUsersSchema = Joi.object({
-  filter: Joi.string().alphanum().min(1).max(30),
+  filter: Joi.string().min(1).max(30),
   page: Joi.number().min(1).max(99999),
   pageSize: Joi.number().max(100).min(1),
   sortField: Joi.string().valid("id", "username", "name", "email"),
@@ -25,7 +25,7 @@ export class GetUsersController implements Controller {
     console.log("[GetUsersController] Buscando usuarios....");
     const query = { ...defaultPagination, ...req.query };
 
-    const { error } = GetUsersSchema.validate(query);
+    const { error, value } = GetUsersSchema.validate(query);
     console.log("[GetUsersController] Validation");
     console.log(error);
     if (error !== undefined) {
@@ -37,7 +37,7 @@ export class GetUsersController implements Controller {
       return;
     }
 
-    const users = await GetUsers.execute(query);
+    const users = await GetUsers.execute(value);
 
     console.log("[GetUsersController] Usuarios encontrados..");
     console.log(users);
