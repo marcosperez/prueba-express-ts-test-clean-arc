@@ -45,6 +45,7 @@ export class User {
       id: this.id,
       name: this.name,
       username: this.username,
+      passwordHash: this.passwordHash,
       email: this.email,
       street: this.address?.street,
       suite: this.address?.suite,

@@ -9,10 +9,10 @@ datasource db {
 
 model Users {
   id           Int     @id(map: "id") @default(autoincrement())
-  name         String?
+  name         String
   username     String
   passwordHash String
-  email        String?
+  email        String
   address      String?
   street       String?
   suite        String?
