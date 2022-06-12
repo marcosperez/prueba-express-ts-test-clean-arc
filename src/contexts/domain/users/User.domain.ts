@@ -3,9 +3,10 @@ import { UserContactData } from "./UserContactData.domain";
 
 export interface UserParams {
   id: number;
-  name: Maybe<string>;
-  username: Maybe<string>;
-  email: Maybe<string>;
+  name: string;
+  username: string;
+  passwordHash: string;
+  email: string;
   street: Maybe<string>;
   suite: Maybe<string>;
   city: Maybe<string>;
@@ -16,15 +17,17 @@ export interface UserParams {
 
 export class User {
   id: number;
-  name: Maybe<string>;
-  username: Maybe<string>;
-  email: Maybe<string>;
+  name: string;
+  username: string;
+  passwordHash: string;
+  email: string;
   address: Maybe<UserContactData>;
 
   constructor(params: UserParams) {
     this.id = params.id;
     this.name = params.name;
     this.username = params.username;
+    this.passwordHash = params.passwordHash;
     this.email = params.email;
 
     this.address = new UserContactData(

@@ -6,6 +6,7 @@ import { Controller } from "../Controller";
 
 const PostUsersSchema = Joi.object({
   username: Joi.string().alphanum().min(3).max(30).required(),
+  passwordHash: Joi.string().alphanum().min(3).max(30).required(),
   name: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string().email().required(),
   street: Joi.string(),

@@ -8,15 +8,16 @@ datasource db {
 }
 
 model Users {
-  id       Int     @id(map: "id") @default(autoincrement())
-  name     String?
-  username String?
-  email    String?
-  address  String?
-  street   String?
-  suite    String?
-  city     String?
-  zipcode  String?
-  phone    String?
-  website  String?
+  id           Int     @id(map: "id") @default(autoincrement())
+  name         String?
+  username     String
+  passwordHash String
+  email        String?
+  address      String?
+  street       String?
+  suite        String?
+  city         String?
+  zipcode      String?
+  phone        String?
+  website      String?
 }
