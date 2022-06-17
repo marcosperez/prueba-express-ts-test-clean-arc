@@ -1,9 +1,9 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import MorganConfig from "./src/configs/morgan.config";
+import MorganConfig from "./configs/morgan.config";
 import cors from "cors";
 import { json } from "body-parser";
-import { ConfigAppRouter } from "./src/configs/router.config";
+import { ConfigAppRouter } from "./configs/router.config";
 dotenv.config();
 
 const app: Express = express();

@@ -1,33 +1,36 @@
 import { Maybe } from "../../context.common";
 import { UserContactData } from "./UserContactData.domain";
-
-export interface UserParams {
-  id: number;
-  name: string;
-  username: string;
-  passwordHash: string;
-  email: string;
-  street: Maybe<string>;
-  suite: Maybe<string>;
-  city: Maybe<string>;
-  zipcode: Maybe<string>;
-  phone: Maybe<string>;
-  website: Maybe<string>;
-}
+import bcrypt from "bcrypt";
+import { UserDTO } from "./UserDTO.domain";
+import { sign } from "jsonwebtoken";
+import { JWTPayload } from "./JWTPayload.domain";
+const tokenSecret = process.env.TOKEN_SECRET || "secreto123?@";
 
 export class User {
-  id: number;
+  id: Maybe<number>;
   name: string;
   username: string;
   passwordHash: string;
   email: string;
   address: Maybe<UserContactData>;
 
-  constructor(params: UserParams) {
+  constructor(params: {
+    id: Maybe<number>;
+    name: string;
+    username: string;
+    email: string;
+    passwordHash: string;
+    street: Maybe<string>;
+    suite: Maybe<string>;
+    city: Maybe<string>;
+    zipcode: Maybe<string>;
+    phone: Maybe<string>;
+    website: Maybe<string>;
+  }) {
     this.id = params.id;
     this.name = params.name;
-    this.username = params.username;
     this.passwordHash = params.passwordHash;
+    this.username = params.username;
     this.email = params.email;
 
     this.address = new UserContactData(
@@ -42,10 +45,9 @@ export class User {
 
   persistData() {
     return {
-      id: this.id,
+      id: this.id || undefined,
       name: this.name,
       username: this.username,
-      passwordHash: this.passwordHash,
       email: this.email,
       street: this.address?.street,
       suite: this.address?.suite,
@@ -53,12 +55,30 @@ export class User {
       zipcode: this.address?.zipcode,
       phone: this.address?.phone,
       website: this.address?.website,
+      passwordHash: this.passwordHash,
     };
   }
 
-  static create(params: UserParams) {
-    const user = new User(params);
+  static toUserDTO(user: User): UserDTO {
+    return {
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      street: user.address?.street,
+      suite: user.address?.suite,
+      city: user.address?.city,
+      zipcode: user.address?.zipcode,
+      phone: user.address?.phone,
+      website: user.address?.website,
+    };
+  }
 
-    return user;
+  static async hashPassword(password: string) {
+    return await bcrypt.hash(password, 10);
+  }
+
+  static generateJWT(payload: JWTPayload) {
+    return sign(payload, tokenSecret, { expiresIn: "1800s" });
   }
 }
