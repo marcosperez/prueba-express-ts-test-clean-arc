@@ -1,12 +1,18 @@
 import { Request, Response } from "express";
 import Joi from "joi";
-import RegisterUserService from "../../application/users/RegisterUser.application";
+import { RegisterUserService } from "../../application/users/RegisterUser.application";
+import { UserRepository } from "../../infrastructure/users/User.repository";
 import { Controller } from "../Controller";
 
-class RegisterUserController implements Controller {
+export class RegisterUserController implements Controller {
+  registerUserService: RegisterUserService;
+  constructor(registerUserService: RegisterUserService) {
+    this.registerUserService = registerUserService;
+  }
+
   async handler(req: Request, res: Response): Promise<void> {
     try {
-      const [ok, user] = await RegisterUserService.execute(req.body);
+      const [ok, user] = await this.registerUserService.execute(req.body);
 
       if (!ok) {
         res.status(404).json({
@@ -51,4 +57,4 @@ export const BodyRegisterSchema = Joi.object({
   website: Joi.string(),
 });
 
-export default new RegisterUserController();
+// export default new RegisterUserController();

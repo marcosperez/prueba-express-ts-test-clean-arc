@@ -2,12 +2,11 @@ import { User } from "../../domain/users/User.domain";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { GetUsersFilterCriteria } from "../../domain/users/GetUsersFilterCriteria.domain";
 import { UserRepositoryInterface } from "./User.repository.interface";
-import { PageData } from "../Infrastructure.common";
 
-class UserRepository implements UserRepositoryInterface {
+export class UserRepository implements UserRepositoryInterface {
   prisma: PrismaClient;
-  constructor() {
-    this.prisma = new PrismaClient();
+  constructor(client: PrismaClient = new PrismaClient()) {
+    this.prisma = client;
   }
 
   // Default repository methods
@@ -21,16 +20,12 @@ class UserRepository implements UserRepositoryInterface {
     const skip = (where.page - 1) * where.pageSize;
     const whereQuery = this.buildFindWhereFilter(where);
 
-    const allUsers = await this.prisma.users.findMany({
+    const query = {
       where: whereQuery,
       take: where.pageSize,
       skip: skip,
-    });
-    const totalUsers = await this.prisma.users.count({ where: whereQuery });
-
-    const pageData = {
-      totalRegistries: totalUsers,
     };
+    const allUsers = await this.prisma.users.findMany(query);
 
     return allUsers.map((dbUser) => new User(dbUser));
   }
@@ -56,12 +51,12 @@ class UserRepository implements UserRepositoryInterface {
 
   // Custom methods
   async findByUsername(login: string): Promise<User | null> {
-    const user = await this.prisma.users.findFirst({
+    const where = {
       where: {
         username: login,
       },
-    });
-
+    };
+    const user = await this.prisma.users.findFirst(where);
     return user ? new User(user) : null;
   }
 
@@ -84,5 +79,3 @@ class UserRepository implements UserRepositoryInterface {
     return whereQuery;
   }
 }
-
-export default new UserRepository();

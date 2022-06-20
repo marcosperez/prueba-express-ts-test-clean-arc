@@ -78,6 +78,10 @@ export class User {
     return await bcrypt.hash(password, 10);
   }
 
+  static async comparePassword(hash: string, password: string) {
+    return await bcrypt.compare(password, hash);
+  }
+
   static generateJWT(payload: JWTPayload) {
     return sign(payload, tokenSecret, { expiresIn: "1800s" });
   }

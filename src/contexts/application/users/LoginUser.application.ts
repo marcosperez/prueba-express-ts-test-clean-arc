@@ -1,27 +1,34 @@
-import { FunctionResult } from "../../context.common";
+import { ServiceResult } from "../../context.common";
 import { LoginUser } from "../../domain/users/LoginUser.domain";
 import { LoginUserToken } from "../../domain/users/LoginUserToken.domain";
 import { User } from "../../domain/users/User.domain";
-import userRepository from "../../infrastructure/users/User.repository";
+import { UserRepositoryInterface } from "../../infrastructure/users/User.repository.interface";
 import { Service } from "../Service";
 
-class LoginUserService implements Service<LoginUser, LoginUserToken> {
+export class LoginUserService implements Service<LoginUser, LoginUserToken> {
+  userRepository: UserRepositoryInterface;
+  constructor(userRepository: UserRepositoryInterface) {
+    this.userRepository = userRepository;
+  }
+
   async execute(
     userLoginData: LoginUser
-  ): Promise<FunctionResult<LoginUserToken>> {
-    const user = await userRepository.findByUsername(userLoginData.login);
+  ): Promise<ServiceResult<LoginUserToken>> {
+    const user = await this.userRepository.findByUsername(userLoginData.login);
     if (!user) {
+      console.log("[LoginUserService] Usuario no encontrado");
       return [false, undefined];
     }
 
-    const hash = await User.hashPassword(userLoginData.password);
-    if (hash !== user.passwordHash) {
+    if (
+      !(await User.comparePassword(user.passwordHash, userLoginData.password))
+    ) {
+      console.log("[LoginUserService] Hash diferente ", user.passwordHash);
       return [false, undefined];
     }
+
     const tokenJWT = User.generateJWT({ username: userLoginData.login });
-
+    console.log("[LoginUserService] JWT generado exitosamente");
     return [true, { token: tokenJWT }];
   }
 }
-
-export default new LoginUserService();

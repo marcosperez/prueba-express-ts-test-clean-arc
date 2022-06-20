@@ -1,5 +1,5 @@
-import { FunctionResult } from "../context.common";
+import { ServiceResult } from "../context.common";
 
 export interface Service<T, R> {
-  execute(params: T): Promise<FunctionResult<R | undefined>>;
+  execute(params: T): Promise<ServiceResult<R | undefined>>;
 }

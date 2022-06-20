@@ -1,9 +1,8 @@
-import axios from "axios";
 import { Request, Response } from "express";
 import Joi from "joi";
-import GetUsersService from "../../application/users/GetUsers.application";
 import { Controller } from "../Controller";
 import { GetUsersFilterCriteria } from "../../domain/users/GetUsersFilterCriteria.domain";
+import { GetUsersService } from "../../application/users/GetUsers.application";
 
 export const QueryGetUsersSchema = Joi.object({
   filter: Joi.string().min(1).max(30),
@@ -21,10 +20,15 @@ const defaultPagination: GetUsersFilterCriteria = {
 };
 
 export class GetUsersController implements Controller {
+  getUsersService: GetUsersService;
+  constructor(getUsersService: GetUsersService) {
+    this.getUsersService = getUsersService;
+  }
+
   async handler(req: Request, res: Response): Promise<void> {
     console.log("[GetUsersController] Buscando usuarios....");
     const query = { ...defaultPagination, ...req.query };
-    const [ok, users] = await GetUsersService.execute(query);
+    const [ok, users] = await this.getUsersService.execute(query);
     if (!ok) {
       res.status(404).json({
         status: false,
@@ -39,5 +43,3 @@ export class GetUsersController implements Controller {
     res.json(users);
   }
 }
-
-export default new GetUsersController();

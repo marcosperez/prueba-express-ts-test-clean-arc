@@ -1,12 +1,18 @@
 import { Request, Response } from "express";
 import Joi from "joi";
-import LoginUserService from "../../application/users/LoginUser.application";
+import { LoginUserService } from "../../application/users/LoginUser.application";
+import { UserRepository } from "../../infrastructure/users/User.repository";
 import { Controller } from "../Controller";
 
-class LoginUserController implements Controller {
+export class LoginUserController implements Controller {
+  loginUserService: LoginUserService;
+  constructor(loginUserService: LoginUserService) {
+    this.loginUserService = loginUserService;
+  }
+
   async handler(req: Request, res: Response): Promise<void> {
     try {
-      const [ok, token] = await LoginUserService.execute(req.body);
+      const [ok, token] = await this.loginUserService.execute(req.body);
       if (!ok) {
         res.status(404).json({
           status: false,
@@ -40,5 +46,3 @@ export const BodyLoginSchema = Joi.object({
     .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
     .required(),
 });
-
-export default new LoginUserController();
