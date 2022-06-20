@@ -5,9 +5,8 @@ import cors from "cors";
 import { json } from "body-parser";
 import { ConfigAppRouter } from "./configs/router.config";
 import { AppRepositories } from "./contexts/infrastructure/repositories";
-import { PrismaClient } from "@prisma/client";
 import { AppServices } from "./contexts/application/services";
-import prisma from "./helpers/client";
+import prisma from "./contexts/infrastructure/client";
 dotenv.config();
 
 export function createApp(client = prisma) {
