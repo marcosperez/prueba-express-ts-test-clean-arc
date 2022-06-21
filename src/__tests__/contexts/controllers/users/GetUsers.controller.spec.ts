@@ -32,9 +32,9 @@ describe("Get Users Controller", function () {
       .expect(200)
       .then((response) => {
         console.log(response.body);
-        expect(true).toBeTruthy();
-        expect(response.body.count).toBe(1);
-        expect(response.body.list[0].id).toBe(666);
+        expect(response.body.status).toBeTruthy();
+        expect(response.body.data.users.count).toBe(1);
+        expect(response.body.data.users.list[0].id).toBe(666);
         done();
       })
       .catch((err) => done(err));
@@ -94,9 +94,9 @@ describe("Get Users Controller", function () {
       .expect(200)
       .then((response) => {
         console.log(response.body);
-        expect(true).toBeTruthy();
-        expect(response.body.count).toBe(2);
-        expect(response.body.list[0].id).toBe(665);
+        expect(response.body.status).toBeTruthy();
+        expect(response.body.data.users.count).toBe(2);
+        expect(response.body.data.users.list[0].id).toBe(665);
         done();
       })
       .catch((err) => done(err));

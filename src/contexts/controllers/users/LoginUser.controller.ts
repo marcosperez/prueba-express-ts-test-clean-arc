@@ -14,9 +14,9 @@ export class LoginUserController implements Controller {
     try {
       const [ok, token] = await this.loginUserService.execute(req.body);
       if (!ok) {
-        res.status(404).json({
+        res.status(401).json({
           status: false,
-          message: "Error en login",
+          message: "Error en datos de login",
         });
         return;
       }

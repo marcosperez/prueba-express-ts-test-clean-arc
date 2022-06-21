@@ -4,7 +4,11 @@ import { UserRepository } from "../../../../contexts/infrastructure/users/User.r
 import { prismaMock } from "../../../helpers/prisma.mock";
 
 describe("Tests for RegisterUser Service ", () => {
-  beforeEach(async () => {
+  // beforeEach(async () => {
+
+  // });
+
+  test("Register succefuly", async () => {
     const newUser = {
       id: 1000,
       username: "marcosp222",
@@ -21,9 +25,7 @@ describe("Tests for RegisterUser Service ", () => {
     };
 
     prismaMock.users.create.mockResolvedValue(newUser);
-  });
 
-  test("Register succefuly", async () => {
     const service = new RegisterUserService(new UserRepository(prismaMock));
     const registerUser = {
       username: "marcosp222",

@@ -24,7 +24,7 @@ export class RegisterUserController implements Controller {
 
       res.status(200).json({
         status: ok,
-        data: user,
+        data: { user },
       });
     } catch (err) {
       console.log("[RegisterUsersController][Error]");

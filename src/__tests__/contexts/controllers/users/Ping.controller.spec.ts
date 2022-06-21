@@ -3,7 +3,7 @@ import { createApp } from "../../../../app";
 import { prismaMock } from "../../../helpers/prisma.mock";
 
 describe("Ping Controller", () => {
-  test("Ping succefuly", (done) => {
+  test("Ping succeful", (done) => {
     request(createApp(prismaMock))
       .get("/ping")
       .expect("Content-Type", /json/)

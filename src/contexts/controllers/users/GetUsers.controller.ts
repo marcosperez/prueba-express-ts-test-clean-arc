@@ -40,6 +40,9 @@ export class GetUsersController implements Controller {
     console.log("[GetUsersController] Usuarios encontrados..");
     console.log(users);
 
-    res.json(users);
+    res.status(200).json({
+      status: ok,
+      data: { users },
+    });
   }
 }
